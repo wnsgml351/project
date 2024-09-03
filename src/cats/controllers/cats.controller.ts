@@ -1,21 +1,12 @@
-import { AuthService } from '../../auth/auth.service';
-import { HttpExceptionFilter } from 'src/common/excetpions/http-exception.filter';
-import { CatsService } from '../services/cats.service';
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Req,
-    UploadedFiles,
-    UseFilters,
-    UseGuards,
-    UseInterceptors,
-} from '@nestjs/common';
+import { Body, UploadedFiles, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
+import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { CatsService } from '../services/cats.service';
 import { CatRequestDto } from '../dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from '../dto/cat.dto';
+import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
@@ -60,19 +51,17 @@ export class CatsController {
         return this.authService.jwtLogIn(data);
     }
 
-    @ApiOperation({ summary: '로그아웃' })
-    @Post('logout')
-    logOut() {
-        return 'logout';
-    }
-
     @ApiOperation({ summary: '고양이 이미지 업로드' })
     @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
     @UseGuards(JwtAuthGuard)
     @Post('upload')
     uploadCatImg(@UploadedFiles() files: Array<Express.Multer.File>, @CurrentUser() cat: Cat) {
-        console.log(files);
-        // return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
         return this.catsService.uploadImg(cat, files);
+    }
+
+    @ApiOperation({ summary: '모든 고양이 가져오기' })
+    @Get('all')
+    getAllCat() {
+        return this.catsService.getAllCat();
     }
 }

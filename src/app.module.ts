@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
             // useCreateIndex: true,
             // useFindAndModify: false,
         }),
+        CommentsModule,
         CatsModule,
         AuthModule,
     ],
@@ -25,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
 })
 export class AppModule implements NestModule {
     private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
+
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(LoggerMiddleware).forRoutes('*');
         mongoose.set('debug', this.isDev);
