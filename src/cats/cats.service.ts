@@ -21,6 +21,6 @@ export class CatsService {
 
         const cat = await this.catModel.create({ email, name, password: hashedPassword });
 
-        return cat;
+        return cat.readOnlyData;
     }
 }
