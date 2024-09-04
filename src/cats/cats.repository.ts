@@ -19,16 +19,13 @@ export class CatsRepository {
         // const result = await this.catModel.find().populate('comments', CommentsModel);
 
         const result = await this.catModel.find().populate({ path: 'comments', model: this.commentModel });
-
-        return result;
-
         return result;
     }
 
     async findByIdAndUpdateImg(id: string, fileName: string) {
         const cat = await this.catModel.findById(id);
 
-        cat.imgUrl = `http://localhost:8000/media/${fileName}`;
+        cat.imgUrl = fileName;
 
         const newCat = await cat.save();
 

@@ -7,12 +7,11 @@ import { CatsRepository } from './cats.repository';
 import { Cat, CatSchema } from './cats.schema';
 import { CatsService } from './services/cats.service';
 import { CommentsSchema, Comments } from '../comments/comments.schema';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
     imports: [
-        MulterModule.register({
-            dest: './upload',
-        }),
+        ConfigModule.forRoot({ isGlobal: true }),
         MongooseModule.forFeature([
             { name: Comments.name, schema: CommentsSchema },
             { name: Cat.name, schema: CatSchema },
